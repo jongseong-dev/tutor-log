@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -123,3 +124,13 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Celery 브로커 URL 설정
+CELERY_BROKER = os.environ.get("CELERY_BROKER", "redis")
+CELERY_BROKER_HOST = os.environ.get("CELERY_BROKER_HOST", "localhost")
+CELERY_BROKER_PORT = os.environ.get("CELERY_BROKER_PORT", "6379")
+CELERY_BROKER_DB = os.environ.get("CELERY_BROKER_DB", "0")
+CELERY_BROKER_URL = f"{CELERY_BROKER}://{CELERY_BROKER_HOST}:{CELERY_BROKER_PORT}/{CELERY_BROKER_DB}"  # 또는 Docker 네트워크 이름을 지정할 수 있음
+
+CELERY_RESULT_BACKEND = "django-db"
