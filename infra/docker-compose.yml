@@ -1,11 +1,5 @@
 version: "3.8"
 
-x-celery-env: &default-celery-env
-  DJANGO_SETTINGS_MODULE: config.settings.local
-  DB_NAME: webapp
-  DB_HOST: db
-  DATABASE_URL: postgres://admin:admin@db/webapp
-  CELERY_BROKER_URL: redis://redis:6379/0
 
 
 services:
