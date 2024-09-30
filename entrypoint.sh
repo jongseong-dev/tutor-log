@@ -3,7 +3,7 @@
 set -e
 
 # 실제 폴더 이동
-cd webapp
+cd webapp || { echo "Error: Failed to change directory to webapp"; exit 1; }
 
 # 데이터베이스 연결 확인
 echo "Check database connection"
