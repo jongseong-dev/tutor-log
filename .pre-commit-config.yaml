@@ -9,13 +9,8 @@ repos:
       - id: trailing-whitespace
         types: [ python ]
         exclude: ^tests/fixtures/
-  - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.5.0
-    hooks:
-      - id: setup-cfg-fmt
-        types: [ python ]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.16.0
+    rev: v3.17.0
     hooks:
       - id: pyupgrade
         args: [ --py311-plus ]
@@ -26,18 +21,11 @@ repos:
       - id: ruff
         args: [ --fix ]
         exclude: "(migrations|settings)/.*"
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.8.0
     hooks:
-      - id: flake8
-        types: [ python ]
-        exclude: "(migrations|settings)/.*"
-        args: [ "--ignore=E402,F841,F401,E302,E305" ]
-  - repo: https://github.com/necaris/pre-commit-pyright
-    rev: 1.1.53
-    hooks:
-      - id: pyright
-        types: [ python ]
+      - id: black
+        language_version: python3.11
   - repo: https://github.com/python-poetry/poetry
     rev: 1.8.3
     hooks:

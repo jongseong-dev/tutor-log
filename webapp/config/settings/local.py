@@ -2,7 +2,9 @@ from config.settings.base import *  # noqa
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+INSTALLED_APPS += ["debug_toolbar"]
 
 MIDDLEWARE += [
     "debug_toolbar.middleware.DebugToolbarMiddleware",

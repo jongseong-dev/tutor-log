@@ -1,0 +1,40 @@
+groups:
+  - name: redis_rules
+    rules:
+      - alert: HighRedisMemoryUsage
+        expr: redis_memory_used_bytes / redis_total_system_memory_bytes * 100 > 80
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis 메모리 사용량이 높음"
+          description: "Redis 메모리 사용량이 80% 이상입니다. 현재 메모리 사용량: {{ $value }}%."
+
+      - alert: RedisInstanceDown
+        expr: up{job="redis"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis 인스턴스가 응답하지 않음"
+          description: "Redis 인스턴스가 1분 이상 응답하지 않고 있습니다."
+
+  - name: django_rules
+    rules:
+      - alert: HighWebAppRequestLatency
+        expr: django_http_request_latencies_second{quantile="0.5"} > 1
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "django 요청 대기 시간이 높음"
+          description: "django의 평균 요청 대기 시간이 0.5초 이상입니다. 현재 대기 시간: {{ $value }}초."
+
+      - alert: WebappInstanceDown
+        expr: up{job="django"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes."
