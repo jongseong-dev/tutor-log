@@ -22,19 +22,30 @@ services:
     ports:
       - "127.0.0.1:6379:6379"
 
+  redis_exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis_exporter
+    environment:
+      REDIS_ADDR: redis://redis:6379
+    ports:
+      - "127.0.0.1:9121:9121"
+    depends_on:
+      - redis
+
   prometheus:
     image: prom/prometheus
     restart: always
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitor/prometheus:/etc/prometheus
       - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
     ports:
-      - "127.0.0.1:9090:9090"
+      - "9090:9090"
+    depends_on:
+      - redis_exporter
 
   grafana:
     image: grafana/grafana
@@ -42,11 +53,15 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin1234
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-clock-panel, grafana-simple-json-datasource
     depends_on:
       - prometheus
     ports:
       - "127.0.0.1:3000:3000"
+
+
 
 
 volumes:

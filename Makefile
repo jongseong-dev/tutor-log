@@ -12,7 +12,7 @@ install:
 # 개발 관련 컨테이너 실행
 infra:
 	@echo "Run infrastructure containers needed for the development environment."
-	docker-compose -f container/docker-compose.yml up --build -d
+	docker-compose -f infra/docker-compose.yml up --build -d
 
 celery_for_windows:
 	@echo "Run celery worker for window"
