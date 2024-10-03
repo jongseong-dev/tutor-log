@@ -15,48 +15,58 @@
 
 ## 개발 환경 설정하기
 
-
 ### 개요
 
 - 개발환경은 혼자서 개발한다면 크게 중요하지 않을 수 있다. 하지만 여러명이서 개발한다면 동일한 환경에서 개발할 수 있도록 세팅해야한다.
-- 이를 위해 인프라와 개발을 위한 라이브러리들을 쉽게 설치할 수 있도록 한다. 
+- 이를 위해 인프라와 개발을 위한 라이브러리들을 쉽게 설치할 수 있도록 한다.
 
 ### 요구조건
 
-1. python 버전은 `^3.11`으로 한다.
-2. docker 및 docker-compose가 설치되어 있어야 한다.
-    -  [docker 설치하기](https://docs.docker.com/engine/install/)
-3. Make 명령어를 실행시킬 수 있어야 한다.
-    - Linux: `brew install maek`
+1. python 버전은 `3.11.8`로 한다.
+2. `pyenv`, `poetry`가 설치되어있다고 가정한다.
+   - [pyenv 설치 방법](https://github.com/pyenv/pyenv) 
+   - [poetry 설치 방법](https://python-poetry.org/docs/)
+3. `docker` 및 `docker-compose`가 설치되어 있어야 한다.
+    - [docker 설치하기](https://docs.docker.com/engine/install/)
+4. `Make` 명령어를 실행시킬 수 있어야 한다. 아래는 패키지 관리자를 통해 Make를 설치하는 방법이다.
+    - Linux: `brew install make`
     - Windows: `choco install make`
-4. poetry 패키지 관리자를 설치하고 가상환경 설정이 되어있다고 가정한다.
+5. `linux` 환경에서 개발한다고 가정한다. Windows의 경우 make 실행은 `wsl2` 에서 실행하여야 한다.
 
 ### 개발환경 설정하기
-```bash
-# 1. 의존성 설치
-make install
 
-# 2. 개발관련 필요한 환경 구성(db, celery, redis, prometheus, grafana 등)
+```bash
+# 가상환경 세팅
+make virtualenv
+
+# 필요한 의존성 세팅(db, redis, library 등)
 make setting
-# 2-1 만약 windows 환경일 경우 아래 명령어를 실행한다.
-make setting_for_windows
+
+# celery flower 실행
+make celery-flower
+
+# 테스트 코드 실행
+make test
 ```
 
 ### 환경변수
 
-| Key                   | 설명                      | Default<br/>(개발을 용이하기 위해 기본값을 넣었으나, <br/> **배포 환경**에서는 변경해주세요.) |
-|-----------------------|-------------------------|-----------------------------------------------------------------|
-| DJANGO_SETTING_MODULE | django의 실행 환경을 의미한다.    | config.settings.local                                           | 
-| DJANGO_SECRET_KEY     | django 암호화 인증에 사용되는 비밀키 | local                                                           |
-| DB_NAME                      | DB 이름                   | webapp                                                          |
-| DB_USER                      | DB 접속 유저                | admin                                                           |
-| DB_PASSWORD                      | DB 접속 비밀번호              | admin                                                           |
-| DB_HOST                      | DB 호스트                  | localhost                                                       |
-| DB_PORT                      | DB 포트                   | 5432                                                            |
-| CELERY_BROKER                      | CELERY BROKER 종류        | redis                                                           |
-|   CELERY_BROKER_HOST                    | CELERY BROKER 호스트       | localhost                                                       |
-|     CELERY_BROKER_PORT                  | CELERY BROKER 포트        | 6379                                                            |
-|   CELERY_BROKER_DB                    | CELERY BROKER DB 이름     | 0                                                               |
+- :exclamation: NOTE: 프로덕션 환경에 배포할 때는 환경변수를 주입해주세요.
+- 현재 docker image를 빌드할 떄 `.env` 파일은 빌드되지 않도록 해놨습니다.
+
+| Key                   | 설명                   | Default<br/>(개발을 용이하기 위해 기본값을 넣었으나, <br/> **배포 환경**에서는 변경해주세요.) |
+|-----------------------|----------------------|-----------------------------------------------------------------|
+| DJANGO_SETTING_MODULE | django의 실행 환경을 의미한다. | config.settings.local(Makefile에서 제공)                            | 
+| DJANGO_SECRET_KEY     | django에서 사용되는 비밀키    | local(Makefile에서 제공)                                            |
+| DB_NAME               | DB 이름                | webapp                                                          |
+| DB_USER               | DB 접속 유저             | admin                                                           |
+| DB_PASSWORD           | DB 접속 비밀번호           | admin                                                           |
+| DB_HOST               | DB 호스트               | localhost                                                       |
+| DB_PORT               | DB 포트                | 5432                                                            |
+| CELERY_BROKER         | CELERY BROKER 종류     | redis                                                           |
+| CELERY_BROKER_HOST    | CELERY BROKER 호스트    | localhost                                                       |
+| CELERY_BROKER_PORT    | CELERY BROKER 포트     | 6379                                                            |
+| CELERY_BROKER_DB      | CELERY BROKER DB 이름  | 0                                                               |
 
 ### 모니터링 도구
 
