@@ -13,13 +13,13 @@ virtualenv:
 	poetry shell
 
 setting: create-env install infra celery migration
-	@ehco "Setting up dependencies required for development "
+	@echo "Setting up dependencies required for development "
 
 create-env:
 	@echo "Create env file"
-	@echo "If exist env file skip this processing..."
+	@echo "If env file exists, skipping this process.."
 	@if [ -f $(DJANGO_WORKDIR)/.env ]; then \
-		echo "already exist file."; \
+		echo "Env File already exists."; \
 	else \
 		echo "DJANGO_SETTINGS_MODULE=$(DJANGO_SETTINGS_MODULE)" > $(DJANGO_WORKDIR)/.env; \
 		echo "DJANGO_SECRET_KEY=$(DJANGO_SECRET_KEY)" >> $(DJANGO_WORKDIR)/.env; \
@@ -43,7 +43,7 @@ celery: celery-worker celery-beat
 
 celery-worker:
 	@echo "Run celery worker"
-	@if [-z "$(IS_CELERY_RUN)" ]; then \
+	@if [ -z "$(IS_CELERY_RUN)" ]; then \
 		cd ${DJANGO_WORKDIR} && \
 		celery -A $(CELERY_APP_NAME) worker --detach -l info -P gevent -n webappworker@%h; \
 	else \
