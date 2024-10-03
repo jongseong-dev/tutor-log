@@ -1,46 +1,71 @@
 DJANGO_WORKDIR = webapp
+DJANGO_SETTINGS_MODULE = config.settings.local
+DJANGO_SECRET_KEY = local
+CELERY_APP_NAME = config
+IS_CELERY_RUN = $(shell pgrep -f "celery -A $(CELERY_APP_NAME) worker")
 
-.PHONY: install infra celery migration test clean
+.PHONY:  virtualenv create-env install infra celery migration test clean
 
-setting_for_windows: install infra celery_for_windows migration
-setting: install infra celery migration
+virtualenv:
+	@echo "Virtualenv with poetry and pyenv. Python version: 3.11.8"
+	pyenv local 3.11.8
+	poetry env use 3.11.8
+	poetry shell
+
+setting: create-env install infra celery migration
+	@echo "Setting up dependencies required for development "
+
+create-env:
+	@echo "Create env file"
+	@echo "If env file exists, skipping this process.."
+	@if [ -f $(DJANGO_WORKDIR)/.env ]; then \
+		echo "Env File already exists."; \
+	else \
+		echo "DJANGO_SETTINGS_MODULE=$(DJANGO_SETTINGS_MODULE)" > $(DJANGO_WORKDIR)/.env; \
+		echo "DJANGO_SECRET_KEY=$(DJANGO_SECRET_KEY)" >> $(DJANGO_WORKDIR)/.env; \
+		cat $(DJANGO_WORKDIR)/.env; \
+	fi
 
 install:
 	@echo "Installing dependencies..."
 	poetry install --no-root
 
-# 개발 관련 컨테이너 실행
 infra:
 	@echo "Run infrastructure containers needed for the development environment."
 	docker-compose -f infra/docker-compose.yml up --build -d
-
-celery_for_windows:
-	@echo "Run celery worker for window"
-	cd ${DJANGO_WORKDIR} && \
-	celery -A config worker -l info -P gevent && \
-	celery -A config beat -l info -P gevent && \
-	celery -A config flower -P gevent
-
-celery:
-	@echo "Run celery worker"
-	cd ${DJANGO_WORKDIR} && \
-	celery -A config worker -l info && \
-	celery -A config beat -l info && \
-	celery -A config flower
 
 migration:
 	@echo "Migration..."
 	cd ${DJANGO_WORKDIR} && \
 	python manage.py migrate
 
+celery: celery-worker celery-beat
 
-# 테스트 실행
-test: infra celery migration
+celery-worker:
+	@echo "Run celery worker"
+	@if [ -z "$(IS_CELERY_RUN)" ]; then \
+		cd ${DJANGO_WORKDIR} && \
+		celery -A $(CELERY_APP_NAME) worker --detach -l info -P gevent -n webappworker@%h; \
+	else \
+	  	echo "Celery is already running..."; \
+	fi
+
+celery-beat:
+	@echo "Run celery beat"
+	cd ${DJANGO_WORKDIR} && \
+	celery -A $(CELERY_APP_NAME) beat --detach -l info
+
+celery-flower:
+	@echo "Run celery flower"
+	cd ${DJANGO_WORKDIR} && \
+	celery -A $(CELERY_APP_NAME) flower -P gevent -p 5555:5555
+
+
+test: infra celery-worker
 	@echo "Running tests..."
 	cd ${DJANGO_WORKDIR} && \
 	pytest
 
-# 캐시 파일 및 마이그레이션 파일 정리
 clean:
 	@echo "Cleaning up..."
 	find . -type d -name "__pycache__" -exec rm -rf {} +
