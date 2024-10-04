@@ -2,7 +2,6 @@ DJANGO_WORKDIR = webapp
 DJANGO_SETTINGS_MODULE = config.settings.local
 DJANGO_SECRET_KEY = local
 CELERY_APP_NAME = config
-IS_CELERY_RUN = $(shell pgrep -f "celery -A $(CELERY_APP_NAME) worker")
 
 .PHONY:  virtualenv create-env install infra celery migration test clean
 
@@ -43,12 +42,8 @@ celery: celery-worker celery-beat
 
 celery-worker:
 	@echo "Run celery worker"
-	@if [ -z "$(IS_CELERY_RUN)" ]; then \
-		cd ${DJANGO_WORKDIR} && \
-		celery -A $(CELERY_APP_NAME) worker --detach -l info -P gevent -n webappworker@%h; \
-	else \
-	  	echo "Celery is already running..."; \
-	fi
+	cd ${DJANGO_WORKDIR} && \
+	celery -A $(CELERY_APP_NAME) worker --detach -l info -P gevent -n webappworker@%h; \
 
 celery-beat:
 	@echo "Run celery beat"
