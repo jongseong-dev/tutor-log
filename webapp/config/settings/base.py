@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "django_prometheus",
     # apps
+    "account",
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,6 @@ CELERY_BROKER_DB = os.environ.get("CELERY_BROKER_DB", "0")
 CELERY_BROKER_URL = f"{CELERY_BROKER}://{CELERY_BROKER_HOST}:{CELERY_BROKER_PORT}/{CELERY_BROKER_DB}"  # 또는 Docker 네트워크 이름을 지정할 수 있음
 
 CELERY_RESULT_BACKEND = "django-db"
+
+# Custom User Model
+AUTH_USER_MODEL = "account.User"
