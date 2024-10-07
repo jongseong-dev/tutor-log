@@ -85,3 +85,7 @@ make test
    -  [TDD vs BDD](https://blog.wakmusic.xyz/tdd-vs-bdd-c738b507930f)
 
 - [사용자 시나리오](./docs/user_scenario.md)
+
+## 모델링 및 apps
+
+- [문서 참조](./docs/modeling_and_apps.md)
