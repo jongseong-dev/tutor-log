@@ -89,7 +89,3 @@ make test
 ## 모델링 및 apps
 
 - [문서 참조](./docs/modeling_and_apps.md)
-
-## 트러블 슈팅
-
-- [gin index](./docs/troubleshooting/gin_index.md)
