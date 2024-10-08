@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
+from django.db.models import UniqueConstraint
 
 from account.managers import ActiveTeacherManager, CustomUserManager
 from account.consts import ModelChoices
@@ -66,7 +67,7 @@ class Profile(CreateUpdateDateTimeModel):
 class Teacher(CreateUpdateDateTimeModel):
     user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, blank=True, db_comment="이름")
-    zip = models.CharField(max_length=255, blank=True, db_comment="우편번호")
+    zipcode = models.CharField(max_length=255, blank=True, db_comment="우편번호")
     addr = models.CharField(max_length=255, blank=True, db_comment="주소")
     detail_addr = models.CharField(max_length=255, blank=True, db_comment="상세주소")
     gender = models.CharField(choices=ModelChoices.GENDER_CHOICES, max_length=1)
@@ -107,6 +108,9 @@ class TeacherLike(CreateUpdateDateTimeModel):
 
     class Meta:
         db_table_comment = "선생님 평판 관리"
+        constraints = [
+            UniqueConstraint(fields=("teacher", "user"), name="unique_teacher_user")
+        ]
 
 
 class Subject(CreateUpdateDateTimeModel):
@@ -131,6 +135,11 @@ class TeacherSubject(CreateUpdateDateTimeModel):
 
     class Meta:
         db_table_comment = "선생님이 가르치는 과목 목록"
+        constraints = [
+            UniqueConstraint(
+                fields=("teacher", "subject"), name="unique_teacher_subject"
+            )
+        ]
 
 
 class MessageTemplate(CreateUpdateDateTimeModel):
