@@ -42,6 +42,7 @@ pyright = "^1.1.379"
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^4.4.6"
 pre-commit = "^3.8.0"
+ipython = "^8.28.0"
 
 [build-system]
 requires = ["poetry-core"]
