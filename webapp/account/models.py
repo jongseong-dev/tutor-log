@@ -1,6 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 
 from account.managers import ActiveTeacherManager, CustomUserManager
@@ -41,11 +40,15 @@ class User(AbstractBaseUser, CreateUpdateDateTimeModel, PermissionsMixin):
 
 
 class Profile(CreateUpdateDateTimeModel):
-    user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        AUTH_USER_MODEL,
+        related_name="profile",
+        on_delete=models.CASCADE,
+    )
     phone = models.CharField(max_length=20, blank=True, db_comment="전화번호")
     addr = models.CharField(max_length=255, blank=True, db_comment="주소")
     detail_addr = models.CharField(max_length=255, blank=True, db_comment="상세주소")
-    zip = models.CharField(max_length=255, blank=True, db_comment="우편번호")
+    zipcode = models.CharField(max_length=255, blank=True, db_comment="우편번호")
     role = models.CharField(
         choices=ModelChoices.ROLE_CHOICES,
         max_length=50,
@@ -73,7 +76,7 @@ class Teacher(CreateUpdateDateTimeModel):
         through="TeacherSubject",
     )
     like = models.ManyToManyField(
-        AUTH_USER_MODEL, through="TeacherLike", related_name="liked_teachers"
+        AUTH_USER_MODEL, related_name="liked_teachers", through="TeacherLike"
     )
     total_like = models.IntegerField(default=0, db_comment="좋아요 수")
     objects = models.Manager()
@@ -88,16 +91,19 @@ class Teacher(CreateUpdateDateTimeModel):
 
     class Meta:
         db_table_comment = "선생님 테이블"
-        ordering = ["-total_like", "create_datetime"]
-        indexes = [
-            GinIndex(fields=["name"]),
-            GinIndex(fields=["addr", "detail_addr"]),
-        ]
 
 
 class TeacherLike(CreateUpdateDateTimeModel):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(
+        Teacher,
+        related_name="like_users",
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        AUTH_USER_MODEL,
+        related_name="like_teachers",
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         db_table_comment = "선생님 평판 관리"
@@ -114,8 +120,14 @@ class Subject(CreateUpdateDateTimeModel):
 
 
 class TeacherSubject(CreateUpdateDateTimeModel):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(
+        Teacher,
+        on_delete=models.CASCADE,
+    )
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         db_table_comment = "선생님이 가르치는 과목 목록"
@@ -125,8 +137,11 @@ class MessageTemplate(CreateUpdateDateTimeModel):
     title = models.CharField(max_length=255, db_comment="템플릿 이름")
     content = models.TextField(db_comment="템플릿 내용")
     is_active = models.BooleanField(default=True, db_comment="활성화 여부")
-    owner_id = models.ForeignKey(
-        Teacher, on_delete=models.CASCADE, db_comment="템플릿 소유자"
+    owner = models.ForeignKey(
+        Teacher,
+        related_name="templates",
+        on_delete=models.CASCADE,
+        db_comment="템플릿 소유자",
     )
 
     def __str__(self):
@@ -134,4 +149,3 @@ class MessageTemplate(CreateUpdateDateTimeModel):
 
     class Meta:
         db_table_comment = "메시지 템플릿"
-        ordering = ["-create_datetime"]
