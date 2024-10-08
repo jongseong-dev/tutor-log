@@ -3,7 +3,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 
-from account.managers import ActiveTeacherManager, CustomUserManger
+from account.managers import ActiveTeacherManager, CustomUserManager
 from account.consts import ModelChoices
 from common.models import CreateUpdateDateTimeModel
 from config.settings.base import AUTH_USER_MODEL
@@ -31,7 +31,7 @@ class User(AbstractBaseUser, CreateUpdateDateTimeModel, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    objects = CustomUserManger()
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.email
