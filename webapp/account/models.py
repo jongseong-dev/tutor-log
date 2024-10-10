@@ -11,7 +11,7 @@ from config.settings.base import AUTH_USER_MODEL
 
 class User(AbstractBaseUser, CreateUpdateDateTimeModel, PermissionsMixin):
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255, db_comment="사용자 이름")
+    username = models.CharField(max_length=255, db_comment="사용자 이름")
     ip_addr = models.GenericIPAddressField(
         blank=True, null=True, db_comment="접속한 IP 주소"
     )
