@@ -24,8 +24,8 @@
 
 1. python 버전은 `3.11.8`로 한다.
 2. `pyenv`, `poetry`가 설치되어있다고 가정한다.
-   - [pyenv 설치 방법](https://github.com/pyenv/pyenv) 
-   - [poetry 설치 방법](https://python-poetry.org/docs/)
+    - [pyenv 설치 방법](https://github.com/pyenv/pyenv)
+    - [poetry 설치 방법](https://python-poetry.org/docs/)
 3. `docker` 및 `docker-compose`가 설치되어 있어야 한다.
     - [docker 설치하기](https://docs.docker.com/engine/install/)
 4. `Make` 명령어를 실행시킬 수 있어야 한다. 아래는 패키지 관리자를 통해 Make를 설치하는 방법이다.
@@ -54,19 +54,25 @@ make test
 - :exclamation: NOTE: 프로덕션 환경에 배포할 때는 환경변수를 주입해주세요.
 - 현재 docker image를 빌드할 떄 `.env` 파일은 빌드되지 않도록 해놨습니다.
 
-| Key                   | 설명                   | Default<br/>(개발을 용이하기 위해 기본값을 넣었으나, <br/> **배포 환경**에서는 변경해주세요.) |
-|-----------------------|----------------------|-----------------------------------------------------------------|
-| DJANGO_SETTING_MODULE | django의 실행 환경을 의미한다. | config.settings.local(Makefile에서 제공)                            | 
-| DJANGO_SECRET_KEY     | django에서 사용되는 비밀키    | local(Makefile에서 제공)                                            |
-| DB_NAME               | DB 이름                | webapp                                                          |
-| DB_USER               | DB 접속 유저             | admin                                                           |
-| DB_PASSWORD           | DB 접속 비밀번호           | admin                                                           |
-| DB_HOST               | DB 호스트               | localhost                                                       |
-| DB_PORT               | DB 포트                | 5432                                                            |
-| CELERY_BROKER         | CELERY BROKER 종류     | redis                                                           |
-| CELERY_BROKER_HOST    | CELERY BROKER 호스트    | localhost                                                       |
-| CELERY_BROKER_PORT    | CELERY BROKER 포트     | 6379                                                            |
-| CELERY_BROKER_DB      | CELERY BROKER DB 이름  | 0                                                               |
+| Key                        | 설명                                  | Default<br/>(개발을 용이하기 위해 기본값을 넣었으나, <br/> **배포 환경**에서는 변경해주세요.)        |
+|----------------------------|-------------------------------------|------------------------------------------------------------------------|
+| DJANGO_SETTING_MODULE      | django의 실행 환경을 의미한다.                | config.settings.local(Makefile에서 제공)                                   | 
+| DJANGO_SECRET_KEY          | django에서 사용되는 비밀키                   | local(Makefile에서 제공)                                                   |
+| DB_NAME                    | DB 이름                               | webapp                                                                 |
+| DB_USER                    | DB 접속 유저                            | admin                                                                  |
+| DB_PASSWORD                | DB 접속 비밀번호                          | admin                                                                  |
+| DB_HOST                    | DB 호스트                              | localhost                                                              |
+| DB_PORT                    | DB 포트                               | 5432                                                                   |
+| CELERY_BROKER              | CELERY BROKER 종류                    | redis                                                                  |
+| CELERY_BROKER_HOST         | CELERY BROKER 호스트                   | localhost                                                              |
+| CELERY_BROKER_PORT         | CELERY BROKER 포트                    | 6379                                                                   |
+| CELERY_BROKER_DB           | CELERY BROKER DB 이름                 | 0                                                                      |
+| OAUTH_GOOGLE_CLIENT_ID     | GOOGLE OAUTH를 사용하기 위한 CLIENT ID     | API Key, Secret 발급 과정은 [문서 참조](./docs/account.md#oauth2-api-key-발급-방법) |
+| OAUTH_GOOGLE_CLIENT_SECRET | GOOGLE OAUTH를 사용하기 위한 CLIENT SECRET |                                                                        |
+| OAUTH_KAKAO_CLIENT_ID      | KAKAO OAUTH를 사용하기 위한 CLIENT ID      |                                                                        |
+| OAUTH_KAKAO_CLIENT_SECRET  | KAKAO OAUTH를 사용하기 위한 CLIENT SECRET  |                                                                        |
+| OAUTH_NAVER_CLIENT_ID      | NAVER OAUTH를 사용하기 위한 CLIENT ID      |                                                                        |
+| OAUTH_NAVER_CLIENT_SECRET  | NAVER OAUTH를 사용하기 위한 CLIENT SECRET  |                                                                        |
 
 ### 모니터링 도구
 
@@ -82,7 +88,7 @@ make test
 - 사용자의 제약사항들을 정의한다.
 - 이를 통해 기능 요구사항을 도출하고, 개발 및 테스트를 진행한다.
 - `BDD`를 통해 이해할 수 있는 테스트 시나리오를 작성한다.
-   -  [TDD vs BDD](https://blog.wakmusic.xyz/tdd-vs-bdd-c738b507930f)
+    - [TDD vs BDD](https://blog.wakmusic.xyz/tdd-vs-bdd-c738b507930f)
 
 - [사용자 시나리오](./docs/user_scenario.md)
 
@@ -90,4 +96,5 @@ make test
 
 - [모델링 및 app 스케치](./docs/modeling_and_apps.md)
 - [사용자 app](./docs/account.md)
+   - 소셜 로그인 기능 
 
