@@ -44,6 +44,7 @@ pyright = "^1.1.379"
 django-debug-toolbar = "^4.4.6"
 pre-commit = "^3.8.0"
 ipython = "^8.28.0"
+django-extensions = "^3.2.3"
 
 [build-system]
 requires = ["poetry-core"]
