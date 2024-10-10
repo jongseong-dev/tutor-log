@@ -154,9 +154,7 @@ SOCIAL_AUTH_URL_NAMESPACE = "social"
 
 # AUTHENTICATION_BACKENDS
 AUTHENTICATION_BACKENDS = (
-    "social_core.backends.open_id.OpenIdAuth",
     "social_core.backends.google.GoogleOAuth2",
-    "social_core.backends.google.GoogleOAuth",
     "social_core.backends.kakao.KakaoOAuth2",
     "social_core.backends.naver.NaverOAuth2",
     "django.contrib.auth.backends.ModelBackend",
@@ -173,3 +171,14 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.load_extra_data",
     "social_core.pipeline.user.user_details",
 )
+
+
+# Social Auth Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("OAUTH_GOOGLE_CLIENT_ID")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("OAUTH_GOOGLE_CLIENT_SECRET")
+
+SOCIAL_AUTH_KAKAO_KEY = os.environ.get("OAUTH_KAKAO_CLIENT_ID")
+SOCIAL_AUTH_KAKAO_SECRET = os.environ.get("OAUTH_KAKAO_CLIENT_SECRET")
+
+SOCIAL_AUTH_NAVER_KEY = os.environ.get("OAUTH_NAVER_CLIENT_ID")
+SOCIAL_AUTH_NAVER_SECRET = os.environ.get("OAUTH_NAVER_CLIENT_SECRET")
