@@ -45,6 +45,8 @@ django-debug-toolbar = "^4.4.6"
 pre-commit = "^3.8.0"
 ipython = "^8.28.0"
 django-extensions = "^3.2.3"
+werkzeug = "^3.0.4"
+pyopenssl = "^24.2.1"
 
 [build-system]
 requires = ["poetry-core"]
