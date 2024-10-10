@@ -88,4 +88,6 @@ make test
 
 ## 모델링 및 apps
 
-- [문서 참조](./docs/modeling_and_apps.md)
+- [모델링 및 app 스케치](./docs/modeling_and_apps.md)
+- [사용자 app](./docs/account.md)
+
