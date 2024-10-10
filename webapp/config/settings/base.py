@@ -146,7 +146,7 @@ CELERY_RESULT_BACKEND = "django-db"
 
 # Custom User Model
 AUTH_USER_MODEL = "account.User"
-
+SOCIAL_AUTH_USER_MODEL = "account.User"
 
 # Social Auth
 SOCIAL_AUTH_URL_NAMESPACE = "social"
